@@ -1,6 +1,6 @@
-# OpenGlTemplate
+# OpenGL 3D Cellular Automata
 
-A template for OpenGL projects.
+A 3D Cellular Automata written with OpenGL.
 
 ## Build and Run
 
