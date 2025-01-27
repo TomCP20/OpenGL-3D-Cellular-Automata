@@ -130,6 +130,15 @@ int main()
 
     ourShader.use();
 
+    //setup cells
+    int res = 16;
+    int volume = res*res*res;
+    bool cells[volume];
+    for (int i = 0; i < volume; i++)
+    {
+        cells[i] = rand() % 2 == 0;   
+    }
+
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -161,8 +170,6 @@ int main()
         ourShader.setMat4("view", view);
 
         // gen mesh
-        int res = 16;
-
         ourShader.setInt("res", res);
         std::vector<float> mesh;
 
@@ -173,7 +180,7 @@ int main()
                 for (int z = 0; z < res; z++)
                 {
                     int i = z + res * x + res * res * y;
-                    if ((x + y + z) % 2 == 0)
+                    if (cells[i])
                     {
                         for (int v = 0; v < vertices_count; v++)
                         {
