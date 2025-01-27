@@ -3,6 +3,8 @@ out vec4 FragColor;
 
 in vec3 col;
 
+uniform int res;
+
 vec3 Quantization(float n, vec3 col)
 {
     return floor(col * n) / (n - 1.0);
@@ -10,5 +12,5 @@ vec3 Quantization(float n, vec3 col)
 
 void main()
 {
-    FragColor = vec4(Quantization(16, col), 1.0);
+    FragColor = vec4(Quantization(res, col), 1.0);
 }

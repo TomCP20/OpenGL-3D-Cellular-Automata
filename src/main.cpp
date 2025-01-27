@@ -162,6 +162,8 @@ int main()
 
         // gen mesh
         int res = 16;
+
+        ourShader.setInt("res", res);
         std::vector<float> mesh;
 
         for (int y = 0; y < res; y++)
