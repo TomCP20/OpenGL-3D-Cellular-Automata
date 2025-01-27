@@ -3,8 +3,12 @@ out vec4 FragColor;
 
 in vec3 col;
 
+vec3 Quantization(float n, vec3 col)
+{
+    return floor(col * n) / (n - 1.0);
+}
+
 void main()
 {
-	// linearly interpolate between both textures (80% container, 20% awesomeface)
-	FragColor = vec4(col, 1.0);
+    FragColor = vec4(Quantization(16, col), 1.0);
 }
