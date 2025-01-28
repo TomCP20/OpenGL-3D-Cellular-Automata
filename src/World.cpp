@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <math.h>
 
-float backFace[] = {
+float zFace[] = {
     0.0f,
     0.0f,
     0.0f,
@@ -25,28 +25,7 @@ float backFace[] = {
     0.0f,
 };
 
-float frontFace[] = {
-    0.0f,
-    0.0f,
-    1.0f,
-    1.0f,
-    0.0f,
-    1.0f,
-    1.0f,
-    1.0f,
-    1.0f,
-    1.0f,
-    1.0f,
-    1.0f,
-    0.0f,
-    1.0f,
-    1.0f,
-    0.0f,
-    0.0f,
-    1.0f,
-};
-
-float leftFace[] = {
+float xFace[] = {
     0.0f,
     1.0f,
     1.0f,
@@ -67,28 +46,7 @@ float leftFace[] = {
     1.0f,
 };
 
-float rightFace[] = {
-    1.0f,
-    1.0f,
-    1.0f,
-    1.0f,
-    1.0f,
-    0.0f,
-    1.0f,
-    0.0f,
-    0.0f,
-    1.0f,
-    0.0f,
-    0.0f,
-    1.0f,
-    0.0f,
-    1.0f,
-    1.0f,
-    1.0f,
-    1.0f,
-};
-
-float bottomFace[] = {
+float yFace[] = {
     0.0f,
     0.0f,
     0.0f,
@@ -108,14 +66,6 @@ float bottomFace[] = {
     0.0f,
     0.0f,
 };
-
-float topFace[] = {
-    0.0f, 1.0f, 0.0f,
-    1.0f, 1.0f, 0.0f,
-    1.0f, 1.0f, 1.0f,
-    1.0f, 1.0f, 1.0f,
-    0.0f, 1.0f, 1.0f,
-    0.0f, 1.0f, 0.0f};
 
 int vertices_count = 6;
 
@@ -211,27 +161,27 @@ std::vector<float> World::genMesh() const
                 {
                     if (isEmpty(x, y, z - 1))
                     {
-                        addFace(mesh, backFace, x, y, z);
+                        addFace(mesh, zFace, x, y, z);
                     }
                     if (isEmpty(x, y, z + 1))
                     {
-                        addFace(mesh, frontFace, x, y, z);
+                        addFace(mesh, zFace, x, y, z + 1);
                     }
                     if (isEmpty(x - 1, y, z))
                     {
-                        addFace(mesh, leftFace, x, y, z);
+                        addFace(mesh, xFace, x, y, z);
                     }
                     if (isEmpty(x + 1, y, z))
                     {
-                        addFace(mesh, rightFace, x, y, z);
+                        addFace(mesh, xFace, x + 1, y, z);
                     }
                     if (isEmpty(x, y - 1, z))
                     {
-                        addFace(mesh, bottomFace, x, y, z);
+                        addFace(mesh, yFace, x, y, z);
                     }
                     if (isEmpty(x, y + 1, z))
                     {
-                        addFace(mesh, topFace, x, y, z);
+                        addFace(mesh, yFace, x, y + 1, z);
                     }
                 }
             }
