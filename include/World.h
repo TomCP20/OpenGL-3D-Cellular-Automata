@@ -13,6 +13,8 @@ private:
     int countNeighbors(int i) const;
     int mod(int n) const { return (n + resolution) % resolution; }
     int coordToIndex(int x, int y, int z) const { return (x * resolution * resolution + y * resolution + z); }
+    bool isEmpty(int x, int y, int z) const;
+    void addFace(std::vector<float> &mesh, float face[], int x, int y, int z) const;
 
 public:
     World(int res);

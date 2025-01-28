@@ -4,49 +4,120 @@
 #include <algorithm>
 #include <math.h>
 
-float vertices[] = {
-    0.0f, 0.0f, 0.0f,
-    1.0f, 0.0f, 0.0f,
-    1.0f, 1.0f, 0.0f,
-    1.0f, 1.0f, 0.0f,
-    0.0f, 1.0f, 0.0f,
-    0.0f, 0.0f, 0.0f,
+float backFace[] = {
+    0.0f,
+    0.0f,
+    0.0f,
+    1.0f,
+    0.0f,
+    0.0f,
+    1.0f,
+    1.0f,
+    0.0f,
+    1.0f,
+    1.0f,
+    0.0f,
+    0.0f,
+    1.0f,
+    0.0f,
+    0.0f,
+    0.0f,
+    0.0f,
+};
 
-    0.0f, 0.0f, 1.0f,
-    1.0f, 0.0f, 1.0f,
-    1.0f, 1.0f, 1.0f,
-    1.0f, 1.0f, 1.0f,
-    0.0f, 1.0f, 1.0f,
-    0.0f, 0.0f, 1.0f,
+float frontFace[] = {
+    0.0f,
+    0.0f,
+    1.0f,
+    1.0f,
+    0.0f,
+    1.0f,
+    1.0f,
+    1.0f,
+    1.0f,
+    1.0f,
+    1.0f,
+    1.0f,
+    0.0f,
+    1.0f,
+    1.0f,
+    0.0f,
+    0.0f,
+    1.0f,
+};
 
-    0.0f, 1.0f, 1.0f,
-    0.0f, 1.0f, 0.0f,
-    0.0f, 0.0f, 0.0f,
-    0.0f, 0.0f, 0.0f,
-    0.0f, 0.0f, 1.0f,
-    0.0f, 1.0f, 1.0f,
+float leftFace[] = {
+    0.0f,
+    1.0f,
+    1.0f,
+    0.0f,
+    1.0f,
+    0.0f,
+    0.0f,
+    0.0f,
+    0.0f,
+    0.0f,
+    0.0f,
+    0.0f,
+    0.0f,
+    0.0f,
+    1.0f,
+    0.0f,
+    1.0f,
+    1.0f,
+};
 
-    1.0f, 1.0f, 1.0f,
-    1.0f, 1.0f, 0.0f,
-    1.0f, 0.0f, 0.0f,
-    1.0f, 0.0f, 0.0f,
-    1.0f, 0.0f, 1.0f,
-    1.0f, 1.0f, 1.0f,
+float rightFace[] = {
+    1.0f,
+    1.0f,
+    1.0f,
+    1.0f,
+    1.0f,
+    0.0f,
+    1.0f,
+    0.0f,
+    0.0f,
+    1.0f,
+    0.0f,
+    0.0f,
+    1.0f,
+    0.0f,
+    1.0f,
+    1.0f,
+    1.0f,
+    1.0f,
+};
 
-    0.0f, 0.0f, 0.0f,
-    1.0f, 0.0f, 0.0f,
-    1.0f, 0.0f, 1.0f,
-    1.0f, 0.0f, 1.0f,
-    0.0f, 0.0f, 1.0f,
-    0.0f, 0.0f, 0.0f,
+float bottomFace[] = {
+    0.0f,
+    0.0f,
+    0.0f,
+    1.0f,
+    0.0f,
+    0.0f,
+    1.0f,
+    0.0f,
+    1.0f,
+    1.0f,
+    0.0f,
+    1.0f,
+    0.0f,
+    0.0f,
+    1.0f,
+    0.0f,
+    0.0f,
+    0.0f,
+};
 
+float topFace[] = {
     0.0f, 1.0f, 0.0f,
     1.0f, 1.0f, 0.0f,
     1.0f, 1.0f, 1.0f,
     1.0f, 1.0f, 1.0f,
     0.0f, 1.0f, 1.0f,
     0.0f, 1.0f, 0.0f};
-int vertices_count = 36;
+
+int vertices_count = 6;
 
 int World::countNeighbors(int i) const
 {
@@ -73,6 +144,25 @@ int World::countNeighbors(int i) const
         }
     }
     return neighbors;
+}
+
+bool World::isEmpty(int x, int y, int z) const
+{
+    if (x < 0 || x >= resolution || y < 0 || y >= resolution || z < 0 || z >= resolution)
+    {
+        return true;
+    }
+    return !cells[coordToIndex(x, y, z)];
+}
+
+void World::addFace(std::vector<float> &mesh, float face[], int x, int y, int z) const
+{
+    for (int v = 0; v < vertices_count; v++)
+    {
+        mesh.push_back(face[3 * v] + x);
+        mesh.push_back(face[3 * v + 1] + y);
+        mesh.push_back(face[3 * v + 2] + z);
+    }
 }
 
 World::World(int res)
@@ -119,11 +209,29 @@ std::vector<float> World::genMesh() const
                 int i = coordToIndex(x, y, z);
                 if (cells[i])
                 {
-                    for (int v = 0; v < vertices_count; v++)
+                    if (isEmpty(x, y, z - 1))
                     {
-                        mesh.push_back(vertices[3 * v] + x);
-                        mesh.push_back(vertices[3 * v + 1] + y);
-                        mesh.push_back(vertices[3 * v + 2] + z);
+                        addFace(mesh, backFace, x, y, z);
+                    }
+                    if (isEmpty(x, y, z + 1))
+                    {
+                        addFace(mesh, frontFace, x, y, z);
+                    }
+                    if (isEmpty(x - 1, y, z))
+                    {
+                        addFace(mesh, leftFace, x, y, z);
+                    }
+                    if (isEmpty(x + 1, y, z))
+                    {
+                        addFace(mesh, rightFace, x, y, z);
+                    }
+                    if (isEmpty(x, y - 1, z))
+                    {
+                        addFace(mesh, bottomFace, x, y, z);
+                    }
+                    if (isEmpty(x, y + 1, z))
+                    {
+                        addFace(mesh, topFace, x, y, z);
                     }
                 }
             }
