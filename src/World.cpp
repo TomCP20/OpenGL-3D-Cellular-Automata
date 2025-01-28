@@ -64,7 +64,7 @@ int World::countNeighbors(int i) const
                 {
                     continue;
                 }
-                int neighbori = coordToIndex( mod(x + dx), mod(y + dy), mod(z + dz));
+                int neighbori = coordToIndex(mod(x + dx), mod(y + dy), mod(z + dz));
                 if (prevCells[neighbori])
                 {
                     neighbors++;
@@ -121,15 +121,9 @@ std::vector<float> World::genMesh() const
                 {
                     for (int v = 0; v < vertices_count; v++)
                     {
-                        float vx = vertices[3 * v];
-                        float vy = vertices[3 * v + 1];
-                        float vz = vertices[3 * v + 2];
-                        float nx = ((vx + (float)x) / (float)resolution) * 2 - 1;
-                        float ny = ((vy + (float)y) / (float)resolution) * 2 - 1;
-                        float nz = ((vz + (float)z) / (float)resolution) * 2 - 1;
-                        mesh.push_back(nx);
-                        mesh.push_back(ny);
-                        mesh.push_back(nz);
+                        mesh.push_back(vertices[3 * v] + x);
+                        mesh.push_back(vertices[3 * v + 1] + y);
+                        mesh.push_back(vertices[3 * v + 2] + z);
                     }
                 }
             }

@@ -90,7 +90,7 @@ int main()
 
     ourShader.use();
 
-    //setup cells
+    // setup cells
     World world = World(32);
     world.noise();
 
@@ -111,11 +111,6 @@ int main()
             world.step();
             mesh = world.genMesh();
             lastUpdate = currentFrame;
-            for (auto &&m : mesh)
-            {
-                std::cout << m << "\n";
-            }
-            
         }
 
         // input
@@ -150,7 +145,7 @@ int main()
         glEnableVertexAttribArray(0);
 
         // render box
-        glDrawArrays(GL_TRIANGLES, 0, mesh.size());
+        glDrawArrays(GL_TRIANGLES, 0, mesh.size() / 3);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
