@@ -14,6 +14,8 @@
 
 #include <iostream>
 
+#include "World.h"
+
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void mouse_callback(GLFWwindow *window, double xpos, double ypos);
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
@@ -79,51 +81,8 @@ int main()
     // ------------------------------------
     Shader ourShader("shaders/shader.vert", "shaders/shader.frag");
 
-    // set up vertex data (and buffer(s)) and configure vertex attributes
+    // set up buffer(s)
     // ------------------------------------------------------------------
-    float vertices[] = {
-        0.0f, 0.0f, 0.0f,
-        1.0f, 0.0f, 0.0f,
-        1.0f, 1.0f, 0.0f,
-        1.0f, 1.0f, 0.0f,
-        0.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 0.0f,
-
-        0.0f, 0.0f, 1.0f,
-        1.0f, 0.0f, 1.0f,
-        1.0f, 1.0f, 1.0f,
-        1.0f, 1.0f, 1.0f,
-        0.0f, 1.0f, 1.0f,
-        0.0f, 0.0f, 1.0f,
-
-        0.0f, 1.0f, 1.0f,
-        0.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 0.0f,
-        0.0f, 0.0f, 0.0f,
-        0.0f, 0.0f, 1.0f,
-        0.0f, 1.0f, 1.0f,
-
-        1.0f, 1.0f, 1.0f,
-        1.0f, 1.0f, 0.0f,
-        1.0f, 0.0f, 0.0f,
-        1.0f, 0.0f, 0.0f,
-        1.0f, 0.0f, 1.0f,
-        1.0f, 1.0f, 1.0f,
-
-        0.0f, 0.0f, 0.0f,
-        1.0f, 0.0f, 0.0f,
-        1.0f, 0.0f, 1.0f,
-        1.0f, 0.0f, 1.0f,
-        0.0f, 0.0f, 1.0f,
-        0.0f, 0.0f, 0.0f,
-
-        0.0f, 1.0f, 0.0f,
-        1.0f, 1.0f, 0.0f,
-        1.0f, 1.0f, 1.0f,
-        1.0f, 1.0f, 1.0f,
-        0.0f, 1.0f, 1.0f,
-        0.0f, 1.0f, 0.0f};
-    int vertices_count = 36;
     unsigned int VBO, VAO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -131,13 +90,8 @@ int main()
     ourShader.use();
 
     //setup cells
-    int res = 16;
-    int volume = res*res*res;
-    bool cells[volume];
-    for (int i = 0; i < volume; i++)
-    {
-        cells[i] = rand() % 2 == 0;   
-    }
+    World world = World(16);
+    world.noise();
 
     // render loop
     // -----------
@@ -170,34 +124,8 @@ int main()
         ourShader.setMat4("view", view);
 
         // gen mesh
-        ourShader.setInt("res", res);
-        std::vector<float> mesh;
-
-        for (int y = 0; y < res; y++)
-        {
-            for (int x = 0; x < res; x++)
-            {
-                for (int z = 0; z < res; z++)
-                {
-                    int i = z + res * x + res * res * y;
-                    if (cells[i])
-                    {
-                        for (int v = 0; v < vertices_count; v++)
-                        {
-                            float vx = vertices[3 * v];
-                            float vy = vertices[3 * v + 1];
-                            float vz = vertices[3 * v + 2];
-                            float nx = ((vx + (float)x) / (float)res) * 2 - 1;
-                            float ny = ((vy + (float)y) / (float)res) * 2 - 1;
-                            float nz = ((vz + (float)z) / (float)res) * 2 - 1;
-                            mesh.push_back(nx);
-                            mesh.push_back(ny);
-                            mesh.push_back(nz);
-                        }
-                    }
-                }
-            }
-        }
+        ourShader.setInt("res", world.getRes());
+        std::vector<float> mesh = world.genMesh();
 
         glBindVertexArray(VAO);
 
