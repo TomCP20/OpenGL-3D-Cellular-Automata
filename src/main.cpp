@@ -91,7 +91,7 @@ int main()
     ourShader.use();
 
     //setup cells
-    World world = World(16);
+    World world = World(32);
     world.noise();
 
     std::vector<float> mesh = world.genMesh();
@@ -106,9 +106,9 @@ int main()
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        if (currentFrame - lastUpdate > 0.5f)
+        if (currentFrame - lastUpdate > 2.0f)
         {
-            world.noise();
+            world.step();
             mesh = world.genMesh();
             lastUpdate = currentFrame;
         }
