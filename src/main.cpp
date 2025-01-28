@@ -106,11 +106,16 @@ int main()
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        if (currentFrame - lastUpdate > 2.0f)
+        if (currentFrame - lastUpdate > 0.5f)
         {
             world.step();
             mesh = world.genMesh();
             lastUpdate = currentFrame;
+            for (auto &&m : mesh)
+            {
+                std::cout << m << "\n";
+            }
+            
         }
 
         // input
@@ -145,8 +150,6 @@ int main()
         glEnableVertexAttribArray(0);
 
         // render box
-        glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-        ourShader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, mesh.size());
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
