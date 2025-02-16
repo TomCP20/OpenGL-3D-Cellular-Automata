@@ -95,8 +95,6 @@ int main()
     World world = World(32);
     world.noise();
 
-    std::vector<float> mesh = world.genMesh();
-
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -111,7 +109,6 @@ int main()
         {
             //update world and mesh
             world.step();
-            mesh = world.genMesh();
             lastUpdate = currentFrame;
             
             //update window title
@@ -145,14 +142,14 @@ int main()
         glBindVertexArray(VAO);
 
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, mesh.size() * sizeof(float), &mesh.front(), GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, world.mesh.size() * sizeof(float), &world.mesh.front(), GL_STATIC_DRAW);
 
         // position attribute
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
         glEnableVertexAttribArray(0);
 
         // render box
-        glDrawArrays(GL_TRIANGLES, 0, mesh.size() / 3);
+        glDrawArrays(GL_TRIANGLES, 0, world.mesh.size() / 3);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------

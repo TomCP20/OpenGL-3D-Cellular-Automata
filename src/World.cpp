@@ -105,7 +105,7 @@ bool World::isEmpty(int x, int y, int z) const
     return !cells[coordToIndex(x, y, z)];
 }
 
-void World::addFace(std::vector<float> &mesh, float face[], int x, int y, int z) const
+void World::addFace(float face[], int x, int y, int z)
 {
     for (int v = 0; v < vertices_count; v++)
     {
@@ -118,8 +118,11 @@ void World::addFace(std::vector<float> &mesh, float face[], int x, int y, int z)
 World::World(int res)
 {
     resolution = res;
-    cells = std::vector<bool>(res * res * res, false);
-    prevCells = std::vector<bool>(res * res * res, false);
+    int volume = res * res * res;
+    cells = std::vector<bool>(volume, false);
+    prevCells = std::vector<bool>(volume, false);
+    mesh = std::vector<float>();
+    mesh.reserve(volume*3*6*3);
 }
 
 void World::noise()
@@ -128,6 +131,7 @@ void World::noise()
     {
         cells[i] = rand() % 4 == 0;
     }
+    updateMesh();
 }
 
 void World::step()
@@ -145,11 +149,12 @@ void World::step()
             cells[i] = 6 <= neighbors && neighbors <= 6;
         }
     }
+    updateMesh();
 }
 
-std::vector<float> World::genMesh() const
+void World::updateMesh()
 {
-    std::vector<float> mesh;
+    mesh.resize(0);
     for (int x = 0; x < resolution; x++)
     {
         for (int y = 0; y < resolution; y++)
@@ -161,31 +166,30 @@ std::vector<float> World::genMesh() const
                 {
                     if (isEmpty(x, y, z - 1))
                     {
-                        addFace(mesh, zFace, x, y, z);
+                        addFace(zFace, x, y, z);
                     }
                     if (isEmpty(x, y, z + 1))
                     {
-                        addFace(mesh, zFace, x, y, z + 1);
+                        addFace(zFace, x, y, z + 1);
                     }
                     if (isEmpty(x - 1, y, z))
                     {
-                        addFace(mesh, xFace, x, y, z);
+                        addFace(xFace, x, y, z);
                     }
                     if (isEmpty(x + 1, y, z))
                     {
-                        addFace(mesh, xFace, x + 1, y, z);
+                        addFace(xFace, x + 1, y, z);
                     }
                     if (isEmpty(x, y - 1, z))
                     {
-                        addFace(mesh, yFace, x, y, z);
+                        addFace(yFace, x, y, z);
                     }
                     if (isEmpty(x, y + 1, z))
                     {
-                        addFace(mesh, yFace, x, y + 1, z);
+                        addFace(yFace, x, y + 1, z);
                     }
                 }
             }
         }
     }
-    return mesh;
 }
