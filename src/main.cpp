@@ -24,6 +24,7 @@ void processInput(GLFWwindow *window);
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
+const char* WINDOW_NAME = "3D Cellular Automata";
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -51,7 +52,7 @@ int main()
 
     // glfw window creation
     // --------------------
-    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, WINDOW_NAME, NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -108,9 +109,15 @@ int main()
 
         if (currentFrame - lastUpdate > 0.5f)
         {
+            //update world and mesh
             world.step();
             mesh = world.genMesh();
             lastUpdate = currentFrame;
+            
+            //update window title
+            std::stringstream ss;
+            ss << WINDOW_NAME << " [deltatime " << (deltaTime) << "]";
+            glfwSetWindowTitle(window, ss.str().c_str());
         }
 
         // input
