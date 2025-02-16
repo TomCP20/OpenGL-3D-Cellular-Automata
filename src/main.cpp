@@ -24,7 +24,7 @@ void processInput(GLFWwindow *window);
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
-const char* WINDOW_NAME = "3D Cellular Automata";
+const char *WINDOW_NAME = "3D Cellular Automata";
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -36,6 +36,10 @@ bool firstMouse = true;
 float deltaTime = 0.0f; // time between current frame and last frame
 float lastFrame = 0.0f;
 float lastUpdate = 0.0f;
+
+// simulation
+const int RES = 32;
+bool play = true;
 
 int main()
 {
@@ -92,7 +96,7 @@ int main()
     ourShader.use();
 
     // setup cells
-    World world = World(32);
+    World world = World(RES);
     world.noise();
 
     // render loop
@@ -107,11 +111,15 @@ int main()
 
         if (currentFrame - lastUpdate > 0.5f)
         {
-            //update world and mesh
-            world.step();
             lastUpdate = currentFrame;
-            
-            //update window title
+
+            if (play)
+            {
+                // update world and mesh
+                world.step();
+            }
+
+            // update window title
             std::stringstream ss;
             ss << WINDOW_NAME << " [deltatime " << (deltaTime) << "]";
             glfwSetWindowTitle(window, ss.str().c_str());
@@ -172,8 +180,23 @@ int main()
 // ---------------------------------------------------------------------------------------------------------
 void processInput(GLFWwindow *window)
 {
+    static bool spaceHeld = false;
+
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
+
+    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+    {
+        spaceHeld = true;
+    }
+    else
+    {
+        if (spaceHeld)
+        {
+            play = !play;
+        }
+        spaceHeld = false;
+    }
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         camera.ProcessKeyboard(FORWARD, deltaTime);
