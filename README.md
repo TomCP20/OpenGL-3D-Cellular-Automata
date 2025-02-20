@@ -14,4 +14,5 @@ To Run this project:
 * Use the mouse to turn the camera.
 * Use <kbd>WASD</kbd> to move the camera.
 * Press <kbd>SPACE</kbd> to pause / play the simulation.
+* Press <kbd>R</kbd> to reset the simulation.
 * To exit press <kbd>ESC</kbd>.

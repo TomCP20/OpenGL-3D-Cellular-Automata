@@ -19,6 +19,7 @@
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void mouse_callback(GLFWwindow *window, double xpos, double ypos);
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void processInput(GLFWwindow *window);
 
 // settings
@@ -40,6 +41,7 @@ float lastUpdate = 0.0f;
 // simulation
 const int RES = 32;
 bool play = true;
+World world = World(RES);
 
 int main()
 {
@@ -67,6 +69,7 @@ int main()
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
+    glfwSetKeyCallback(window, key_callback);
 
     // tell GLFW to capture our mouse
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -96,7 +99,6 @@ int main()
     ourShader.use();
 
     // setup cells
-    World world = World(RES);
     world.noise();
 
     // render loop
@@ -180,24 +182,8 @@ int main()
 // ---------------------------------------------------------------------------------------------------------
 void processInput(GLFWwindow *window)
 {
-    static bool spaceHeld = false;
-
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
-
-    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-    {
-        spaceHeld = true;
-    }
-    else
-    {
-        if (spaceHeld)
-        {
-            play = !play;
-        }
-        spaceHeld = false;
-    }
-
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         camera.ProcessKeyboard(FORWARD, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -245,4 +231,14 @@ void mouse_callback(GLFWwindow *window, double xposIn, double yposIn)
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
 {
     camera.ProcessMouseScroll(static_cast<float>(yoffset));
+}
+
+// glfw: whenever a physical key is pressed or released, this callback is called
+// ---------------------------------------------------------------------- 
+void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
+{
+    if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE)
+        play = !play;
+    if (key == GLFW_KEY_R && action == GLFW_RELEASE)
+        world.noise();
 }
