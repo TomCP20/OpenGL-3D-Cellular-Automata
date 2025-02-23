@@ -29,9 +29,6 @@ const char *WINDOW_NAME = "3D Cellular Automata";
 
 // camera
 OrbitCamera camera(4.0f, glm::pi<float>()/2, 0.0f);
-float lastX = SCR_WIDTH / 2.0f;
-float lastY = SCR_HEIGHT / 2.0f;
-bool firstMouse = true;
 
 // timing
 float deltaTime = 0.0f; // time between current frame and last frame
@@ -137,7 +134,9 @@ int main()
         ourShader.use();
 
         // pass projection matrix to shader (note that in this case it could change every frame)
-        glm::mat4 projection = glm::perspective(glm::radians(ZOOM), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+        int width, height;
+        glfwGetWindowSize(window, &width, &height);
+        glm::mat4 projection = glm::perspective(glm::radians(ZOOM), (float)width / (float)height, 0.1f, 100.0f);
         ourShader.setMat4("projection", projection);
 
         // camera/view transformation
