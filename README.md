@@ -2,6 +2,8 @@
 
 A 3D Cellular Automata written with OpenGL.
 
+![Screenshot](/Screenshots/1.png)
+
 ## Build and Run
 
 To Run this project:
