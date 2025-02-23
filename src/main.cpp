@@ -10,10 +10,10 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <shader.h>
-#include <camera.h>
 
 #include <iostream>
 
+#include "OrbitCamera.h"
 #include "World.h"
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
@@ -28,7 +28,7 @@ const unsigned int SCR_HEIGHT = 600;
 const char *WINDOW_NAME = "3D Cellular Automata";
 
 // camera
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+OrbitCamera camera(3.0f, glm::pi<float>()/2, 0.0f);
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -70,9 +70,6 @@ int main()
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
     glfwSetKeyCallback(window, key_callback);
-
-    // tell GLFW to capture our mouse
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------
@@ -140,7 +137,7 @@ int main()
         ourShader.use();
 
         // pass projection matrix to shader (note that in this case it could change every frame)
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(ZOOM), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         ourShader.setMat4("projection", projection);
 
         // camera/view transformation
@@ -185,13 +182,13 @@ void processInput(GLFWwindow *window)
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        camera.ProcessKeyboard(FORWARD, deltaTime);
+        camera.rotatePolar(-deltaTime);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        camera.ProcessKeyboard(BACKWARD, deltaTime);
+        camera.rotatePolar(deltaTime);
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        camera.ProcessKeyboard(LEFT, deltaTime);
+        camera.rotateAzimuth(-deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        camera.ProcessKeyboard(RIGHT, deltaTime);
+        camera.rotateAzimuth(deltaTime);
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
@@ -207,30 +204,14 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 // -------------------------------------------------------
 void mouse_callback(GLFWwindow *window, double xposIn, double yposIn)
 {
-    float xpos = static_cast<float>(xposIn);
-    float ypos = static_cast<float>(yposIn);
 
-    if (firstMouse)
-    {
-        lastX = xpos;
-        lastY = ypos;
-        firstMouse = false;
-    }
-
-    float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
-
-    lastX = xpos;
-    lastY = ypos;
-
-    camera.ProcessMouseMovement(xoffset, yoffset);
 }
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
 // ----------------------------------------------------------------------
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
 {
-    camera.ProcessMouseScroll(static_cast<float>(yoffset));
+    camera.zoom(static_cast<float>(yoffset));
 }
 
 // glfw: whenever a physical key is pressed or released, this callback is called

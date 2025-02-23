@@ -11,8 +11,8 @@ To Run this project:
 
 ## Controls
 
-* Use the mouse to turn the camera.
-* Use <kbd>WASD</kbd> to move the camera.
+* Use the mouse wheel to zoom the camera in and out.
+* Use <kbd>WASD</kbd> to rotate the camera.
 * Press <kbd>SPACE</kbd> to pause / play the simulation.
 * Press <kbd>R</kbd> to reset the simulation.
 * To exit press <kbd>ESC</kbd>.
