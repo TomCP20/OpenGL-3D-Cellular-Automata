@@ -28,7 +28,7 @@ const unsigned int SCR_HEIGHT = 600;
 const char *WINDOW_NAME = "3D Cellular Automata";
 
 // camera
-OrbitCamera camera(3.0f, glm::pi<float>()/2, 0.0f);
+OrbitCamera camera(4.0f, glm::pi<float>()/2, 0.0f);
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -182,13 +182,13 @@ void processInput(GLFWwindow *window)
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        camera.rotatePolar(-deltaTime);
+        camera.rotatePolar(2*-deltaTime);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        camera.rotatePolar(deltaTime);
+        camera.rotatePolar(2*deltaTime);
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        camera.rotateAzimuth(-deltaTime);
+        camera.rotateAzimuth(2*-deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        camera.rotateAzimuth(deltaTime);
+        camera.rotateAzimuth(2*deltaTime);
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
