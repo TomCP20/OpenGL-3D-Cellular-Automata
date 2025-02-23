@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <algorithm>
 #include <math.h>
+#include <ctime>
 
 float zFace[] = {
     0.0f,
@@ -127,9 +128,10 @@ World::World(int res)
 
 void World::noise()
 {
+    std::srand(std::time({}));
     for (int i = 0; i < cells.size(); i++)
     {
-        cells[i] = rand() % 4 == 0;
+        cells[i] = ((double)rand())/RAND_MAX <= 0.25;
     }
     updateMesh();
 }
