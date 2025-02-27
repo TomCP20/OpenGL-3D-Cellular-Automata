@@ -18,3 +18,7 @@ To Run this project:
 * Press <kbd>SPACE</kbd> to pause / play the simulation.
 * Press <kbd>R</kbd> to reset the simulation.
 * To exit press <kbd>ESC</kbd>.
+* To change the size of the simulation:
+  * Press <kbd>1</kbd> to set the size of the simulation to 8x8x8
+  * Press <kbd>2</kbd> to set the size of the simulation to 16x16x16
+  * Press <kbd>3</kbd> to set the size of the simulation to 32x32x32

@@ -28,7 +28,7 @@ const unsigned int SCR_HEIGHT = 600;
 const char *WINDOW_NAME = "3D Cellular Automata";
 
 // camera
-OrbitCamera camera(4.0f, glm::pi<float>()/2, 0.0f);
+OrbitCamera camera(4.0f, glm::pi<float>() / 2, 0.0f);
 
 // timing
 float deltaTime = 0.0f; // time between current frame and last frame
@@ -92,9 +92,6 @@ int main()
 
     ourShader.use();
 
-    // setup cells
-    world.noise();
-
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -113,6 +110,7 @@ int main()
             {
                 // update world and mesh
                 world.step();
+                world.updateMesh();
             }
 
             // update window title
@@ -179,15 +177,25 @@ int main()
 void processInput(GLFWwindow *window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    {
         glfwSetWindowShouldClose(window, true);
+    }
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        camera.rotatePolar(2*-deltaTime);
+    {
+        camera.rotatePolar(2 * -deltaTime);
+    }
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        camera.rotatePolar(2*deltaTime);
+    {
+        camera.rotatePolar(2 * deltaTime);
+    }
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        camera.rotateAzimuth(2*-deltaTime);
+    {
+        camera.rotateAzimuth(2 * -deltaTime);
+    }
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        camera.rotateAzimuth(2*deltaTime);
+    {
+        camera.rotateAzimuth(2 * deltaTime);
+    }
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
@@ -203,7 +211,6 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 // -------------------------------------------------------
 void mouse_callback(GLFWwindow *window, double xposIn, double yposIn)
 {
-
 }
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
@@ -218,7 +225,23 @@ void scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
     if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE)
+    {
         play = !play;
+    }
     if (key == GLFW_KEY_R && action == GLFW_RELEASE)
+    {
         world.noise();
+    }
+    if (key == GLFW_KEY_1 && action == GLFW_RELEASE)
+    {
+        world = World(8);
+    }
+    if (key == GLFW_KEY_2 && action == GLFW_RELEASE)
+    {
+        world = World(16);
+    }
+    if (key == GLFW_KEY_3 && action == GLFW_RELEASE)
+    {
+        world = World(32);
+    }
 }

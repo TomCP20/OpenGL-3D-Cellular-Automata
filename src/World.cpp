@@ -124,6 +124,7 @@ World::World(int res)
     prevCells = std::vector<bool>(volume, false);
     mesh = std::vector<float>();
     mesh.reserve(volume*3*6*3);
+    noise();
 }
 
 void World::noise()
@@ -151,7 +152,6 @@ void World::step()
             cells[i] = 6 <= neighbors && neighbors <= 6;
         }
     }
-    updateMesh();
 }
 
 void World::updateMesh()
